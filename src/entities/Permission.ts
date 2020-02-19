@@ -1,11 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany, Index, Generated } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne, Index, Generated, Unique } from 'typeorm';
 
 import { Application } from './Application';
 import { Group } from './Group';
 import { User } from './User';
 
-@Index(['name', 'parent'], { unique: true })
 @Entity()
+@Unique([ 'application', 'parent', 'name' ])
 export class Permission {
     @PrimaryGeneratedColumn()
     id: number;
@@ -18,10 +18,10 @@ export class Permission {
     @Column()
     name: string;
     
-    @OneToMany(type => Permission, permission => permission.parent, { nullable: true })
+    @ManyToOne(type => Permission, permission => permission.parent, { nullable: true })
     parent?: Permission;
 
-    @OneToMany(type => Application, application => application.permissions, { nullable: true })
+    @ManyToOne(type => Application, application => application.permissions, { nullable: true })
     application?: Application;
 
     @ManyToMany(type => Group, group => group.permissions)

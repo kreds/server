@@ -1,10 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, OneToMany, Generated, Index } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, ManyToOne, Generated, Index, Unique } from 'typeorm';
 
 import { Application } from './Application';
 import { Permission } from './Permission';
 import { User } from './User';
 
 @Entity()
+@Unique([ 'application', 'name' ])
 export class Group {
     @PrimaryGeneratedColumn()
     id: number;
@@ -14,14 +15,19 @@ export class Group {
     @Column()
     uuid: string;
 
-    @Index({ unique: true })
     @Column()
     name: string;
+
+    @Column({ nullable: true })
+    fullName?: string;
+
+    @Column({ nullable: true })
+    description?: string
     
-    @OneToMany(type => Group, group => group.parent, { nullable: true })
+    @ManyToOne(type => Group, group => group.parent, { nullable: true })
     parent?: Group;
 
-    @OneToMany(type => Application, application => application.groups, { nullable: true })
+    @ManyToOne(type => Application, application => application.groups, { nullable: true })
     application?: Application;
 
     @ManyToMany(type => User, user => user.groups)

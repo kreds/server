@@ -1,10 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, Unique } from 'typeorm';
 
 import { Application } from './Application';
 import { ApplicationEnvironment } from './ApplicationEnvironment';
 import { User } from './User';
 
 @Entity()
+@Unique([ 'environment', 'user' ])
 export class ApplicationEnvironmentUser {
     @PrimaryGeneratedColumn()
     id: number;

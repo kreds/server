@@ -1,9 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany, Generated, Index } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany, Generated, Index, Unique } from 'typeorm';
 
 import { Application } from './Application';
 import { ApplicationEnvironmentUser } from './ApplicationEnvironmentUser';
 
 @Entity()
+@Unique([ 'application', 'name' ])
 export class ApplicationEnvironment {
     @PrimaryGeneratedColumn()
     id: number;
@@ -12,6 +13,15 @@ export class ApplicationEnvironment {
     @Generated('uuid')
     @Column()
     uuid: string;
+
+    @Column()
+    name: string;
+
+    @Column({ nullable: true })
+    fullName?: string;
+
+    @Column({ nullable: true })
+    description?: string
 
     @Column()
     secret: string;

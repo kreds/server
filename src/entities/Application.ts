@@ -20,6 +20,12 @@ export class Application {
     @Column()
     name: string;
 
+    @Column({ nullable: true })
+    fullName?: string;
+
+    @Column({ nullable: true })
+    description?: string
+
     @OneToMany(type => ApplicationEnvironment, applicationEnvironment => applicationEnvironment.application, { cascade: true })
     environments: ApplicationEnvironment[];
 
