@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "start": "ts-node-dev --respawn --transpileOnly src/index.ts",
+    "typeorm": "ts-node ./node_modules/.bin/typeorm",
     "build": "tsc"
   },
   "dependencies": {
@@ -17,6 +18,7 @@
     "jsonwebtoken": "^8.5.1",
     "reflect-metadata": "^0.1.13",
     "routing-controllers": "^0.8.1-alpha.2",
+    "sqlite3": "^4.1.1",
     "ts-node": "^8.6.2",
     "typeorm": "^0.2.22",
     "typescript": "^3.7.5",

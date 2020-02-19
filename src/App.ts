@@ -22,5 +22,5 @@ export default function App() {
         defaultErrorHandler: false,
     });
     
-    app.listen(process.env.HTTP_PORT || 3000, process.env.HTTP_IP || '127.0.0.1');
+    app.listen(process.env.HTTP_PORT || 8080, process.env.HTTP_IP || '127.0.0.1');
 }
