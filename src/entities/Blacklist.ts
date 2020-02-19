@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-@Entity()
+@Entity('blacklist')
 export class Blacklist {
     @PrimaryGeneratedColumn()
     id: number;
@@ -11,6 +11,6 @@ export class Blacklist {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @Column('timestamp', { nullable: true })
+    @Column('datetime', { nullable: true })
     expiresAt?: Date;
 }

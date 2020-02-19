@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-@Entity()
+@Entity('whitelist')
 export class Whitelist {
     @PrimaryGeneratedColumn()
     id: number;
@@ -11,6 +11,6 @@ export class Whitelist {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @Column('timestamp', { nullable: true })
+    @Column('datetime', { nullable: true })
     expiresAt?: Date;
 }
