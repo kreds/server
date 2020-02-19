@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, Generated } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, Generated, Index } from 'typeorm';
 
 import { ApplicationEnvironment } from './ApplicationEnvironment';
 import { ApplicationEnvironmentUser } from './ApplicationEnvironmentUser';
@@ -11,10 +11,12 @@ export class Application {
     @PrimaryGeneratedColumn()
     id: number;
 
+    @Index({ unique: true })
     @Generated('uuid')
     @Column()
     uuid: string;
 
+    @Index({ unique: true })
     @Column()
     name: string;
 

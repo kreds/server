@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, OneToMany, Generated, Index } from 'typeorm';
 
 import { Application } from './Application';
 import { Permission } from './Permission';
@@ -9,6 +9,15 @@ export class Group {
     @PrimaryGeneratedColumn()
     id: number;
 
+    @Index({ unique: true })
+    @Generated('uuid')
+    @Column()
+    uuid: string;
+
+    @Index({ unique: true })
+    @Column()
+    name: string;
+    
     @OneToMany(type => Group, group => group.parent, { nullable: true })
     parent?: Group;
 
