@@ -19,8 +19,8 @@ export class User {
     @Column()
     name: string;
 
-    @Column()
-    email: string;
+    @Column({ nullable: true })
+    email?: string;
 
     @ManyToMany(type => Group, group => group.users)
     groups: Group[];
