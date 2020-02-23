@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { createExpressServer } from 'routing-controllers';
+import { createKoaServer } from 'routing-controllers';
 
 import { AuthenticationController } from './controllers/AuthenticationController';
 import { ApplicationController } from './controllers/ApplicationController';
@@ -9,7 +9,7 @@ import { UserController } from './controllers/UserController';
 import { ErrorHandler } from './middlewares/ErrorHandler';
 
 export default function App() {
-    const app = createExpressServer({
+    const app = createKoaServer({
         cors: true,
         controllers: [
             AuthenticationController,

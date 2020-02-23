@@ -1,19 +1,19 @@
-import { Request, Response } from 'express';
-import { Middleware, ExpressErrorMiddlewareInterface } from 'routing-controllers';
+import { Context } from 'koa';
+import { Middleware, KoaMiddlewareInterface } from 'routing-controllers';
 
-@Middleware({ type: 'after' })
-export class ErrorHandler implements ExpressErrorMiddlewareInterface {
-    error(error: Error, request: Request, response: Response, next: (err: any) => any) {
-        if (!error || !error.message) {
-            next(null);
-            return;
+@Middleware({ type: 'before' })
+export class ErrorHandler implements KoaMiddlewareInterface {
+    async use(context: Context, next: (err?: any) => Promise<any>): Promise<any> {
+        try {
+            await next();
+        } catch (error) {
+            context.response.status = 500;
+            context.response.body = JSON.stringify({
+                success: false,
+                error: {
+                    message: error.message
+                }
+            });
         }
-
-        next(JSON.stringify({
-            success: false,
-            error: {
-                message: error.message,
-            }
-        }));
     }
 }

@@ -11,13 +11,20 @@
     "build": "tsc"
   },
   "dependencies": {
-    "body-parser": "^1.19.0",
+    "@types/kcors": "^2.2.3",
+    "@types/koa": "^2.11.1",
+    "@types/koa-bodyparser": "^4.3.0",
+    "@types/koa-router": "^7.4.0",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.11.0",
     "cors": "^2.8.5",
     "dotenv-flow": "^3.1.0",
-    "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+    "kcors": "^2.2.2",
+    "koa": "^2.11.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-multer": "^1.0.2",
+    "koa-router": "^8.0.8",
     "reflect-metadata": "^0.1.13",
     "routing-controllers": "^0.8.1-alpha.2",
     "sqlite3": "^4.1.1",
@@ -27,10 +34,8 @@
     "uuid": "^3.4.0"
   },
   "devDependencies": {
-    "@types/body-parser": "^1.19.0",
     "@types/cors": "^2.8.6",
     "@types/dotenv-flow": "^3.0.0",
-    "@types/express": "^4.17.2",
     "@types/jsonwebtoken": "^8.3.7",
     "@types/node": "^13.7.1",
     "@types/uuid": "^3.4.7",
