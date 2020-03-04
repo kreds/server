@@ -3,9 +3,4 @@ import { Controller, QueryParam, Get, Post, Redirect, Req, Res, BodyParam } from
 
 @Controller('/v1/applications')
 export class ApplicationController {
-
-    @Get()
-    test() {
-        throw new Error('test');
-    }
 }
