@@ -1,4 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, OneToMany, Generated, Index } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
+  OneToMany,
+  Generated,
+  Index,
+} from 'typeorm';
 
 import { ApplicationEnvironmentUser } from './ApplicationEnvironmentUser';
 import { Permission } from './Permission';
@@ -9,46 +20,56 @@ import { UserSession } from './UserSession';
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Index({ unique: true })
-    @Generated('uuid')
-    @Column()
-    uuid: string;
+  @Index({ unique: true })
+  @Generated('uuid')
+  @Column()
+  uuid: string;
 
-    @Index({ unique: true })
-    @Column()
-    name: string;
+  @Index({ unique: true })
+  @Column()
+  name: string;
 
-    @Column({ nullable: true })
-    email?: string;
+  @Column({ nullable: true })
+  email?: string;
 
-    @Column({ nullable: true })
-    fullName?: string;
+  @Column({ nullable: true })
+  fullName?: string;
 
-    @ManyToMany(type => Group, group => group.users)
-    groups: Group[];
+  @ManyToMany(type => Group, group => group.users)
+  groups: Group[];
 
-    @ManyToMany(type => Permission, permission => permission.users)
-    @JoinTable()
-    permissions: Permission[];
+  @ManyToMany(type => Permission, permission => permission.users)
+  @JoinTable()
+  permissions: Permission[];
 
-    @OneToMany(type => UserAuthenticationMethod, authenticationMethod => authenticationMethod.user, { cascade: true })
-    authenticationMethods: UserAuthenticationMethod[];
+  @OneToMany(
+    type => UserAuthenticationMethod,
+    authenticationMethod => authenticationMethod.user,
+    { cascade: true }
+  )
+  authenticationMethods: UserAuthenticationMethod[];
 
-    @OneToMany(type => UserApplication, application => application.user, { cascade: true })
-    applications: UserApplication[];
+  @OneToMany(type => UserApplication, application => application.user, {
+    cascade: true,
+  })
+  applications: UserApplication[];
 
-    @OneToMany(type => ApplicationEnvironmentUser, environmentUser => environmentUser.user, { cascade: true })
-    usedApplicationEnvironments: ApplicationEnvironmentUser[];
+  @OneToMany(
+    type => ApplicationEnvironmentUser,
+    environmentUser => environmentUser.user,
+    { cascade: true }
+  )
+  usedApplicationEnvironments: ApplicationEnvironmentUser[];
 
-    @OneToMany(type => UserSession, session => session.user, { cascade: true })
-    sessions: UserSession[];
+  @OneToMany(type => UserSession, session => session.user, { cascade: true })
+  sessions: UserSession[];
 
-    @CreateDateColumn()
-    createdAt: Date;
+  @CreateDateColumn()
+  createdAt: Date;
 
-    @UpdateDateColumn()
-    updatedAt: Date;
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

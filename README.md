@@ -17,9 +17,9 @@ Progress towards reaching the first goal: **0%**.
 
 This should be disclosed within the privacy policy of each given deployment:
 
-* IP address
-* E-mail address
-* Full name
-* Custom user attributes
+- IP address
+- E-mail address
+- Full name
+- Custom user attributes
 
 All of these depend on settings used by a given instance.

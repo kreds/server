@@ -12,31 +12,31 @@ import { ErrorHandler } from './middlewares/ErrorHandler';
 import ormconfig from '../ormconfig';
 
 export default async function App() {
-    useContainer(Container);
-    try {
-        await createConnection({
-            ...ormconfig as any,
-        });
+  useContainer(Container);
+  try {
+    await createConnection({
+      ...(ormconfig as any),
+    });
 
-        const app = createKoaServer({
-            cors: true,
-            controllers: [
-                AuthenticationController,
-                ApplicationController,
-                GroupController,
-                OAuth2Controller,
-                UserController,
-            ],
-            middlewares: [ ErrorHandler ],
-            defaultErrorHandler: false,
-        });
-        
-        const port = process.env.HTTP_PORT || 8080;
-        const ip = process.env.HTTP_IP || '127.0.0.1';
-        app.listen(port, ip);
-        
-        console.log('kreds/server listening on: ' + ip + ':' + port);
-    } catch (e) {
-        console.error(e);
-    }
+    const app = createKoaServer({
+      cors: true,
+      controllers: [
+        AuthenticationController,
+        ApplicationController,
+        GroupController,
+        OAuth2Controller,
+        UserController,
+      ],
+      middlewares: [ErrorHandler],
+      defaultErrorHandler: false,
+    });
+
+    const port = process.env.HTTP_PORT || 8080;
+    const ip = process.env.HTTP_IP || '127.0.0.1';
+    app.listen(port, ip);
+
+    console.log('kreds/server listening on: ' + ip + ':' + port);
+  } catch (e) {
+    console.error(e);
+  }
 }

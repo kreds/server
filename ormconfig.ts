@@ -1,7 +1,7 @@
 export = {
-    type: 'sqlite',
-    database: 'tmp/sqlite.db',
-    synchronize: true,
-    logging: true,
-    entities: [ 'src/entities/*.ts' ],
+  type: 'sqlite',
+  database: 'tmp/sqlite.db',
+  synchronize: true,
+  logging: true,
+  entities: ['src/entities/*.ts'],
 };

@@ -1,35 +1,38 @@
 export enum AuthenticationRequestType {
-    PASSWORD = 'password',
-    OAUTH2 = 'oauth2',
-    EXTENSION = 'extension',
+  PASSWORD = 'password',
+  OAUTH2 = 'oauth2',
+  EXTENSION = 'extension',
 }
 
 export enum AuthenticationRequestPasswordSubtype {
-    BCRYPT = 'bcrypt',
+  BCRYPT = 'bcrypt',
 }
 
 export interface AuthenticationRequest {
-    type: AuthenticationRequestType,
-    subtype: string,
-    data: any,
+  type: AuthenticationRequestType;
+  subtype: string;
+  data: any;
 }
 
 export interface AuthenticationRequestPassword extends AuthenticationRequest {
-    type: AuthenticationRequestType.PASSWORD,
-    subtype: AuthenticationRequestPasswordSubtype,
-    data: string,
+  type: AuthenticationRequestType.PASSWORD;
+  subtype: AuthenticationRequestPasswordSubtype;
+  data: string;
 }
 
 export interface AuthenticationRequestOAuth2 extends AuthenticationRequest {
-    type: AuthenticationRequestType.OAUTH2,
-    subtype: string,
-    data: any,
+  type: AuthenticationRequestType.OAUTH2;
+  subtype: string;
+  data: any;
 }
 
 export interface AuthenticationRequestExtension extends AuthenticationRequest {
-    type: AuthenticationRequestType.EXTENSION,
-    subtype: string,
-    data: any,
+  type: AuthenticationRequestType.EXTENSION;
+  subtype: string;
+  data: any;
 }
 
-export type AuthenticationRequestUnion = AuthenticationRequestPassword | AuthenticationRequestOAuth2 | AuthenticationRequestExtension;
+export type AuthenticationRequestUnion =
+  | AuthenticationRequestPassword
+  | AuthenticationRequestOAuth2
+  | AuthenticationRequestExtension;

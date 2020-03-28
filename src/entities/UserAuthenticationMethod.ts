@@ -1,21 +1,29 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, Unique } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  Unique,
+} from 'typeorm';
 import { User } from './User';
 
 @Entity()
-@Unique([ 'user', 'type', 'subtype' ])
+@Unique(['user', 'type', 'subtype'])
 export class UserAuthenticationMethod {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    type: string;
+  @Column()
+  type: string;
 
-    @Column()
-    subtype: string;
+  @Column()
+  subtype: string;
 
-    @Column()
-    data: string;
+  @Column()
+  data: string;
 
-    @ManyToOne(type => User, user => user.authenticationMethods, { nullable: false })
-    user: User;
+  @ManyToOne(type => User, user => user.authenticationMethods, {
+    nullable: false,
+  })
+  user: User;
 }

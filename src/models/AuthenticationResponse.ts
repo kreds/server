@@ -1,3 +1,3 @@
 export interface AuthenticationResponse {
-    successful: boolean,
+  successful: boolean;
 }

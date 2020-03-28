@@ -1,9 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "lib": [
-      "esnext"
-    ],
+    "lib": ["esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -20,7 +18,5 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }
