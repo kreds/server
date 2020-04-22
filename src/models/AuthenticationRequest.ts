@@ -10,6 +10,7 @@ export enum AuthenticationRequestPasswordSubtype {
 
 export interface AuthenticationRequest {
   type: AuthenticationRequestType;
+  username: string;
   subtype: string;
   data: any;
 }

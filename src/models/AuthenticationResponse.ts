@@ -1,3 +1,9 @@
+export enum AuthenticationResponseResult {
+  SUCCESS = 'success',
+  FAILURE = 'failure',
+  REQUIRE_2FA = 'require_2fa',
+}
+
 export interface AuthenticationResponse {
-  successful: boolean;
+  result: AuthenticationResponseResult;
 }
