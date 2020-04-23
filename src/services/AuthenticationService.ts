@@ -2,6 +2,7 @@ import { Service } from 'typedi';
 import { Repository } from 'typeorm';
 import { OrmRepository } from 'typeorm-typedi-extensions';
 import { compare } from 'bcrypt';
+import { sign } from 'jsonwebtoken';
 
 import { User } from '../entities/User';
 import { UserAuthenticationMethod } from '../entities/UserAuthenticationMethod';
@@ -13,6 +14,7 @@ import {
   AuthenticationResponse,
   AuthenticationResponseResult,
 } from '../models/AuthenticationResponse';
+import { JWTData } from '../models/JWTData';
 
 @Service()
 export class AuthenticationService {
@@ -44,6 +46,7 @@ export class AuthenticationService {
     );
 
     let result = AuthenticationResponseResult.FAILURE;
+    let token: string | undefined = undefined;
 
     switch (request.type) {
       case AuthenticationRequestType.PASSWORD:
@@ -59,8 +62,20 @@ export class AuthenticationService {
         throw new Error('Unsupported authentication request type.');
     }
 
+    if (result === AuthenticationResponseResult.SUCCESS) {
+      const data: JWTData = {
+        authenticated: true,
+        id: user.id,
+        name: user.name,
+      };
+      token = sign(data, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRY,
+      });
+    }
+
     return {
       result,
+      token,
     };
   }
 }

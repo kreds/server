@@ -1,19 +1,12 @@
 import { KoaMiddlewareInterface } from 'routing-controllers';
-import jwt from 'jsonwebtoken';
+import { verify } from 'jsonwebtoken';
+import { Inject } from 'typedi';
 import { Context } from 'koa';
 
-export class Authentication {
-  constructor(public token: JWT) {}
-}
+import { JWTData } from '../models/JWTData';
 
 export interface CustomContext extends Context {
-  authentication?: Authentication;
-}
-
-export interface JWT {
-  id: number;
-  name: string;
-  authenticated: boolean;
+  jwtData?: JWTData;
 }
 
 export class AuthenticationMiddleware implements KoaMiddlewareInterface {
@@ -23,16 +16,16 @@ export class AuthenticationMiddleware implements KoaMiddlewareInterface {
       const token = split[split.length - 1];
 
       try {
-        const data = jwt.verify(token, process.env.JWT_SECRET);
+        const data = verify(token, process.env.JWT_SECRET);
         if (typeof data === 'object') {
-          const token = data as JWT;
+          const token = data as JWTData;
           if (token.authenticated) {
-            context.authentication = new Authentication(token);
+            context.jwtData = token;
           }
         }
       } catch {}
     }
 
-    next();
+    await next();
   }
 }

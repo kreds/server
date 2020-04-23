@@ -10,13 +10,18 @@ import {
   BodyParam,
   Ctx,
   Body,
+  UseBefore,
 } from 'routing-controllers';
 
-import { CustomContext } from '../middlewares/AuthenticationMiddleware';
+import {
+  CustomContext,
+  AuthenticationMiddleware,
+} from '../middlewares/AuthenticationMiddleware';
 import { UserService } from '../services/UserService';
 import { AuthenticationService } from '../services/AuthenticationService';
 import { AuthenticationRequest } from '../models/AuthenticationRequest';
 
+@UseBefore(AuthenticationMiddleware)
 @Controller('/v1/authentication')
 export class AuthenticationController {
   @Inject()
@@ -26,23 +31,23 @@ export class AuthenticationController {
   private authenticationService: AuthenticationService;
 
   @Get('/')
-  index(@Ctx() context: CustomContext) {
-    if (!context.authentication) {
+  async index(@Ctx() context: CustomContext) {
+    if (!context.jwtData || !context.jwtData.authenticated) {
       return {
         isAuthenticated: false,
       };
     }
 
-    const user = this.userService.findUserById(context.authentication.token.id);
+    const user = await this.userService.findUserById(context.jwtData.id);
     return {
-      isAuthenticated: true,
+      isAuthenticated: !!user,
       user,
     };
   }
 
   @Post('/')
-  authenticate(@Body() authenticationRequest: AuthenticationRequest) {
-    const authenticationResult = this.authenticationService.authenticate(
+  async authenticate(@Body() authenticationRequest: AuthenticationRequest) {
+    const authenticationResult = await this.authenticationService.authenticate(
       authenticationRequest
     );
     return authenticationResult;

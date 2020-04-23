@@ -17,10 +17,12 @@ import { Group } from './Group';
 import { UserApplication } from './UserApplication';
 import { UserAuthenticationMethod } from './UserAuthenticationMethod';
 import { UserSession } from './UserSession';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
+  @Exclude()
   id: number;
 
   @Index({ unique: true })

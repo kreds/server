@@ -6,4 +6,5 @@ export enum AuthenticationResponseResult {
 
 export interface AuthenticationResponse {
   result: AuthenticationResponseResult;
+  token?: string;
 }
