@@ -4,7 +4,8 @@
   "main": "src/index.ts",
   "private": true,
   "scripts": {
-    "start": "ts-node-dev --respawn --transpileOnly src/index.ts",
+    "start": "node build/index.js",
+    "dev": "ts-node-dev --respawn --transpileOnly src/index.ts",
     "typeorm": "ts-node ./node_modules/.bin/typeorm",
     "database:sync": "npm run typeorm schema:sync",
     "database:seed": "ts-node src/database/seed.ts",
