@@ -1,6 +1,9 @@
 import 'reflect-metadata';
-import { createKoaServer } from 'routing-controllers';
-import { createConnection, useContainer } from 'typeorm';
+import {
+  createKoaServer,
+  useContainer as useContainerRC,
+} from 'routing-controllers';
+import { createConnection, useContainer as useContainerTO } from 'typeorm';
 import { Container } from 'typedi';
 
 import { AuthenticationController } from './controllers/AuthenticationController';
@@ -15,7 +18,9 @@ import { AuthenticationMiddleware } from './middlewares/AuthenticationMiddleware
 import ormconfig from '../ormconfig';
 
 export default async function App() {
-  useContainer(Container);
+  useContainerTO(Container);
+  useContainerRC(Container);
+
   try {
     await createConnection({
       ...(ormconfig as any),

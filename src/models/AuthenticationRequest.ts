@@ -34,6 +34,7 @@ export interface AuthenticationRequestExtension extends AuthenticationRequest {
 }
 
 export type AuthenticationRequestUnion =
+  | AuthenticationRequest
   | AuthenticationRequestPassword
   | AuthenticationRequestOAuth2
   | AuthenticationRequestExtension;

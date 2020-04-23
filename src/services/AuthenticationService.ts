@@ -1,7 +1,6 @@
 import { Service } from 'typedi';
 import { Repository } from 'typeorm';
 import { OrmRepository } from 'typeorm-typedi-extensions';
-import { BadRequestError, NotFoundError } from 'routing-controllers';
 import { compare } from 'bcrypt';
 
 import { User } from '../entities/User';
