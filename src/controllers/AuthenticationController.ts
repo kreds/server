@@ -1,13 +1,8 @@
 import { Inject } from 'typedi';
 import {
   Controller,
-  QueryParam,
   Get,
   Post,
-  Redirect,
-  Req,
-  Res,
-  BodyParam,
   Ctx,
   Body,
   UseBefore,
