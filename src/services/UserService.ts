@@ -13,4 +13,8 @@ export class UserService {
   async findUserById(id: number) {
     return await this.userRepository.findOne(id);
   }
+
+  async findUserByUuid(uuid: string) {
+    return await this.userRepository.findOne({ where: { uuid: uuid } });
+  }
 }

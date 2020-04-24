@@ -65,7 +65,7 @@ export class AuthenticationService {
     if (result === AuthenticationResponseResult.SUCCESS) {
       const data: JWTData = {
         authenticated: true,
-        id: user.id,
+        uuid: user.uuid,
         name: user.name,
       };
       token = sign(data, process.env.JWT_SECRET, {

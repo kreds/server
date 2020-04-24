@@ -1,5 +1,5 @@
 export interface JWTData {
-  id: number;
+  uuid: string;
   name: string;
   authenticated: boolean;
 }

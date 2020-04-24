@@ -33,7 +33,7 @@ export class AuthenticationController {
       };
     }
 
-    const user = await this.userService.findUserById(context.jwtData.id);
+    const user = await this.userService.findUserByUuid(context.jwtData.uuid);
     return {
       isAuthenticated: !!user,
       user,
