@@ -1,4 +1,5 @@
-import { createConnection, getConnectionManager } from 'typeorm';
+import { createConnection } from 'typeorm';
+import { hashSync } from 'bcrypt';
 
 import ormconfig from '../../ormconfig';
 import { User } from '../entities/User';
@@ -7,10 +8,22 @@ import {
   AuthenticationRequestType,
   AuthenticationRequestPasswordSubtype,
 } from '../models/AuthenticationRequest';
-import { hashSync } from 'bcrypt';
+import { Group } from '../entities/Group';
 
 async function seed() {
   const connection = await createConnection(ormconfig as any);
+
+  const groupRepository = connection.getRepository(Group);
+
+  const superuserGroup = new Group();
+  superuserGroup.name = 'Superusers';
+  superuserGroup.permissions = ['*'];
+  groupRepository.save(superuserGroup);
+
+  const userGroup = new Group();
+  userGroup.name = 'Users';
+  userGroup.permissions = [];
+  groupRepository.save(userGroup);
 
   const authenticationMethod = new UserAuthenticationMethod();
   authenticationMethod.type = AuthenticationRequestType.PASSWORD;
@@ -21,6 +34,7 @@ async function seed() {
   const user = new User();
   user.name = 'admin';
   user.authenticationMethods = [authenticationMethod];
+  user.groups = [superuserGroup, userGroup];
   userRepository.save(user);
 }
 
