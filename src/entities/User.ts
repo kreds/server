@@ -43,8 +43,6 @@ export class User {
   @ManyToMany(type => Group, group => group.users)
   groups: Group[];
 
-  @ManyToMany(type => Permission, permission => permission.users)
-  @JoinTable()
   permissions: Permission[];
 
   @OneToMany(

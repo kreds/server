@@ -48,9 +48,8 @@ export class Group {
   @JoinTable()
   users: User[];
 
-  @ManyToMany(type => Permission, permission => permission.groups)
-  @JoinTable()
-  permissions: Permission[];
+  @Column('simple-json')
+  permissions: string[];
 
   @CreateDateColumn()
   createdAt: Date;

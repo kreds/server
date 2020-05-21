@@ -36,10 +36,4 @@ export class Permission {
     nullable: true,
   })
   application?: Application;
-
-  @ManyToMany(type => Group, group => group.permissions)
-  groups: Group[];
-
-  @ManyToMany(type => User, user => user.permissions)
-  users: User[];
 }
