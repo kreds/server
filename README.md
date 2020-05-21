@@ -13,6 +13,19 @@ Progress towards reaching the first goal: **0%**.
 - [ ] Third-party login support.
 - [ ] SAML support.
 
+## Testing
+
+Kreds is not yet ready for a production deployment. The server can be prepared for testing by running the following commands:
+
+```
+yarn install
+yarn database:sync
+yarn database:seed
+yarn dev
+```
+
+A default `admin` user (password: `admin`) is created with all permissions (the user is in the Superuser group).
+
 ## Personal information processed/stored by the software:
 
 This should be disclosed within the privacy policy of each given deployment:
