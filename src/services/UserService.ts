@@ -17,4 +17,24 @@ export class UserService {
   async findUserByUuid(uuid: string) {
     return await this.userRepository.findOne({ where: { uuid: uuid } });
   }
+
+  async getAllUsers() {
+    return await this.userRepository.find();
+  }
+
+  async addUser(username: string, fullName?: string, email?: string) {
+    const user = new User();
+    user.name = username;
+    user.fullName = fullName;
+    user.email = email;
+    await this.userRepository.save(user);
+  }
+
+  async removeUser(user: User) {
+    await this.userRepository.remove(user);
+  }
+
+  async saveUser(user: User) {
+    await this.userRepository.save(user);
+  }
 }
