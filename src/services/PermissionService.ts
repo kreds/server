@@ -148,6 +148,13 @@ export class PermissionService {
       }
     }
 
+    for (let group of user.groups) {
+      const list = await this.getGroupPermissions(group.uuid);
+      for (let item of list) {
+        set.add(item);
+      }
+    }
+
     const list = Array.from(set);
     this.userPermissionCache[uuid] = list;
     return list;
