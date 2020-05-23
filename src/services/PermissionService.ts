@@ -7,6 +7,7 @@ import { Permission } from '../entities/Permission';
 import { UserService } from './UserService';
 import { GroupService } from './GroupService';
 import { ApplicationService } from './ApplicationService';
+import { Application } from '../entities/Application';
 
 @Service()
 export class PermissionService {
@@ -38,6 +39,34 @@ export class PermissionService {
    * Cache of permissions by namespace.
    */
   private permissionCache: Record<string, string[]>;
+
+  async byId(id: number) {
+    return await this.permissionRepository.findOne(id);
+  }
+
+  async byUuid(uuid: string) {
+    return await this.permissionRepository.findOne({ where: { uuid: uuid } });
+  }
+
+  async all() {
+    return await this.permissionRepository.find();
+  }
+
+  async add(name: string, application?: Application, parent?: Permission) {
+    const permission = new Permission();
+    permission.name = name;
+    permission.application = application;
+    permission.parent = parent;
+    await this.permissionRepository.save(permission);
+  }
+
+  async remove(permission: Permission) {
+    await this.permissionRepository.remove(permission);
+  }
+
+  async save(permission: Permission) {
+    await this.permissionRepository.save(permission);
+  }
 
   async list(namespace: string = 'kreds') {
     if (this.permissionCache[namespace]) {
