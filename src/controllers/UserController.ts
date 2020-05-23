@@ -11,7 +11,7 @@ export class UserController {
   @Get('/')
   async index() {
     // TODO: Check if authenticated and allowed to do that.
-    return await this.userService.getAllUsers();
+    return await this.userService.all();
   }
 
   @Post('/')

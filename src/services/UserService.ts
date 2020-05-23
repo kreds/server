@@ -10,19 +10,19 @@ export class UserService {
   @OrmRepository(User)
   private userRepository: Repository<User>;
 
-  async findUserById(id: number) {
+  async byId(id: number) {
     return await this.userRepository.findOne(id);
   }
 
-  async findUserByUuid(uuid: string) {
+  async byUuid(uuid: string) {
     return await this.userRepository.findOne({ where: { uuid: uuid } });
   }
 
-  async getAllUsers() {
+  async all() {
     return await this.userRepository.find();
   }
 
-  async addUser(username: string, fullName?: string, email?: string) {
+  async add(username: string, fullName?: string, email?: string) {
     const user = new User();
     user.name = username;
     user.fullName = fullName;
@@ -30,11 +30,11 @@ export class UserService {
     await this.userRepository.save(user);
   }
 
-  async removeUser(user: User) {
+  async remove(user: User) {
     await this.userRepository.remove(user);
   }
 
-  async saveUser(user: User) {
+  async save(user: User) {
     await this.userRepository.save(user);
   }
 }
