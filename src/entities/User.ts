@@ -43,7 +43,7 @@ export class User {
   @ManyToMany(type => Group, group => group.users)
   groups: Group[];
 
-  permissions: Permission[];
+  permissions: string[];
 
   @OneToMany(
     type => UserAuthenticationMethod,
