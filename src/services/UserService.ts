@@ -18,13 +18,17 @@ export class UserService {
     return await this.userRepository.findOne({ where: { uuid: uuid } });
   }
 
+  async byName(name: string) {
+    return await this.userRepository.findOne({ where: { name: name } });
+  }
+
   async all() {
     return await this.userRepository.find();
   }
 
-  async add(username: string, fullName?: string, email?: string) {
+  async add(name: string, fullName?: string, email?: string) {
     const user = new User();
-    user.name = username;
+    user.name = name;
     user.fullName = fullName;
     user.email = email;
     await this.userRepository.save(user);

@@ -17,6 +17,10 @@ export class ApplicationService {
     return await this.applicationRepository.findOne({ where: { uuid: uuid } });
   }
 
+  async byName(name: string) {
+    return await this.applicationRepository.findOne({ where: { name: name } });
+  }
+
   async all() {
     return await this.applicationRepository.find();
   }

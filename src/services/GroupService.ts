@@ -17,6 +17,10 @@ export class GroupService {
     return await this.groupRepository.findOne({ where: { uuid: uuid } });
   }
 
+  async byName(name: string) {
+    return await this.groupRepository.findOne({ where: { name: name } });
+  }
+
   async all() {
     return await this.groupRepository.find();
   }
