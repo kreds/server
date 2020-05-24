@@ -52,11 +52,10 @@ export class PermissionService {
     return await this.permissionRepository.find();
   }
 
-  async add(name: string, application?: Application, parent?: Permission) {
+  async add(name: string, application?: Application) {
     const permission = new Permission();
     permission.name = name;
     permission.application = application;
-    permission.parent = parent;
     await this.permissionRepository.save(permission);
   }
 
@@ -85,15 +84,7 @@ export class PermissionService {
       relations: ['parent'],
     });
 
-    const list = permissions.map(permission => {
-      let str = permission.name;
-      let parent = permission.parent;
-      while (parent) {
-        str = parent.name + '.' + str;
-        parent = parent.parent;
-      }
-      return str;
-    });
+    const list = permissions.map(permission => permission.name);
 
     this.permissionCache[namespace] = list;
     return list;

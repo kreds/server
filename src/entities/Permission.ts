@@ -2,35 +2,23 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToMany,
   ManyToOne,
-  Index,
-  Generated,
   Unique,
 } from 'typeorm';
 
 import { Application } from './Application';
-import { Group } from './Group';
-import { User } from './User';
 
 @Entity()
-@Unique(['application', 'parent', 'name'])
+@Unique(['application', 'name'])
 export class Permission {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Index({ unique: true })
-  @Generated('uuid')
-  @Column()
-  uuid: string;
-
   @Column()
   name: string;
 
-  @ManyToOne(type => Permission, permission => permission.parent, {
-    nullable: true,
-  })
-  parent?: Permission;
+  @Column()
+  description: string;
 
   @ManyToOne(type => Application, application => application.permissions, {
     nullable: true,
