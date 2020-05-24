@@ -17,8 +17,8 @@ export class Permission {
   @Column()
   name: string;
 
-  @Column()
-  description: string;
+  @Column({ nullable: true })
+  description?: string;
 
   @ManyToOne(type => Application, application => application.permissions, {
     nullable: true,

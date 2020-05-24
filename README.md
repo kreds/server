@@ -19,7 +19,6 @@ Kreds is not yet ready for a production deployment. The server can be prepared f
 
 ```
 yarn install
-yarn database:sync
 yarn database:seed
 yarn dev
 ```
