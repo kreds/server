@@ -12,7 +12,6 @@ import {
   CustomContext,
   AuthenticationMiddleware,
 } from '../middlewares/AuthenticationMiddleware';
-import { UserService } from '../services/UserService';
 import { AuthenticationService } from '../services/AuthenticationService';
 import { AuthenticationRequest } from '../models/AuthenticationRequest';
 
@@ -20,20 +19,11 @@ import { AuthenticationRequest } from '../models/AuthenticationRequest';
 @Controller('/v1/authentication')
 export class AuthenticationController {
   @Inject()
-  private userService: UserService;
-
-  @Inject()
   private authenticationService: AuthenticationService;
 
   @Get('/')
   async index(@Ctx() context: CustomContext) {
-    if (!context.jwtData || !context.jwtData.authenticated) {
-      return {
-        isAuthenticated: false,
-      };
-    }
-
-    const user = await this.userService.byUuid(context.jwtData.uuid);
+    const user = await context.auth?.user();
     return {
       isAuthenticated: !!user,
       user,
