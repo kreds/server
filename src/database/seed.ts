@@ -11,8 +11,8 @@ import {
 import { Group } from '../entities/Group';
 import { Permission } from '../entities/Permission';
 
-async function seed() {
-  const connection = await createConnection(ormconfig as any);
+export async function seed(ormconfig: any) {
+  const connection = await createConnection(ormconfig);
 
   const groupRepository = connection.getRepository(Group);
 
@@ -48,4 +48,6 @@ async function seed() {
   await userRepository.save(user);
 }
 
-seed();
+if (require.main === module) {
+  seed(ormconfig as any);
+}

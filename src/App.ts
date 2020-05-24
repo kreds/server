@@ -15,15 +15,13 @@ import { UserController } from './controllers/UserController';
 import { ErrorHandler } from './middlewares/ErrorHandler';
 import { AuthenticationMiddleware } from './middlewares/AuthenticationMiddleware';
 
-import ormconfig from '../ormconfig';
-
-export default async function App() {
+export default async function App(ormconfig: any) {
   useContainerTO(Container);
   useContainerRC(Container);
 
   try {
     await createConnection({
-      ...(ormconfig as any),
+      ...ormconfig,
     });
 
     const app = createKoaServer({
