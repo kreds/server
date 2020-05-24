@@ -4,18 +4,18 @@ import { OrmRepository } from 'typeorm-typedi-extensions';
 import matcher from 'matcher';
 
 import { Permission } from '../entities/Permission';
-import { UserService } from './UserService';
 import { GroupService } from './GroupService';
 import { ApplicationService } from './ApplicationService';
 import { Application } from '../entities/Application';
+import { User } from '../entities/User';
 
 @Service()
 export class PermissionService {
   @OrmRepository(Permission)
   private permissionRepository: Repository<Permission>;
 
-  @Inject()
-  private userService: UserService;
+  @OrmRepository(User)
+  private userRepository: Repository<User>;
 
   @Inject()
   private groupService: GroupService;
@@ -112,6 +112,7 @@ export class PermissionService {
     }
 
     const group = await this.groupService.byUuid(uuid);
+
     let set = new Set<string>();
     for (let str of group.permissions) {
       const list = await this.resolvePermissionString(str);
@@ -130,7 +131,11 @@ export class PermissionService {
       return this.userPermissionCache[uuid];
     }
 
-    const user = await this.userService.byUuid(uuid);
+    const user = await this.userRepository.findOne({
+      where: { uuid },
+      relations: ['groups'],
+    });
+
     let set = new Set<string>();
     for (let str of user.permissions) {
       const list = await this.resolvePermissionString(str);
