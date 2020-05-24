@@ -1,31 +1,40 @@
-import { Controller, Get, Post, Put, Delete } from 'routing-controllers';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Ctx,
+  UseBefore,
+} from 'routing-controllers';
 import { Inject } from 'typedi';
 
 import { UserService } from '../services/UserService';
+import {
+  CustomContext,
+  AuthenticationMiddleware,
+} from '../middlewares/AuthenticationMiddleware';
+import { ErrorHandler } from '../middlewares/ErrorHandler';
 
+@UseBefore(ErrorHandler)
+@UseBefore(AuthenticationMiddleware)
 @Controller('/v1/users')
 export class UserController {
   @Inject()
   private userService: UserService;
 
   @Get('/')
-  async index() {
-    // TODO: Check if authenticated and allowed to do that.
+  async index(@Ctx() context: CustomContext) {
+    await context.auth?.requirePermission('kreds:users.list');
     return await this.userService.all();
   }
 
   @Post('/')
-  async create() {
-    // TODO: Check if authenticated and allowed to do that.
-  }
+  async create() {}
 
   @Put('/:id')
-  async update() {
-    // TODO: Check if authenticated and allowed to do that.
-  }
+  async update() {}
 
   @Delete('/:id')
-  async delete() {
-    // TODO: Check if authenticated and allowed to do that.
-  }
+  async delete() {}
 }
