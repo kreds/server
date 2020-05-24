@@ -28,17 +28,17 @@ export class PermissionService {
   /**
    * Cache of permissions allowed for a given user uuid.
    */
-  private userPermissionCache: Record<string, string[]>;
+  private userPermissionCache: Record<string, string[]> = {};
 
   /**
    * Cache of permissions allowed for a given group uuid.
    */
-  private groupPermissionCache: Record<string, string[]>;
+  private groupPermissionCache: Record<string, string[]> = {};
 
   /**
    * Cache of permissions by namespace.
    */
-  private permissionCache: Record<string, string[]>;
+  private permissionCache: Record<string, string[]> = {};
 
   async byId(id: number) {
     return await this.permissionRepository.findOne(id);
@@ -101,9 +101,9 @@ export class PermissionService {
       return [];
     }
 
-    return list.filter(
-      listStr => listStr === str || matcher.isMatch(listStr, str)
-    );
+    return list
+      .filter(listStr => listStr === str || matcher.isMatch(listStr, str))
+      .map(str => namespaceSplit[0] + ':' + str);
   }
 
   async getGroupPermissions(uuid: string) {
@@ -114,10 +114,13 @@ export class PermissionService {
     const group = await this.groupService.byUuid(uuid);
 
     let set = new Set<string>();
-    for (let str of group.permissions) {
-      const list = await this.resolvePermissionString(str);
-      for (let item of list) {
-        set.add(item);
+
+    if (group.permissions) {
+      for (let str of group.permissions) {
+        const list = await this.resolvePermissionString(str);
+        for (let item of list) {
+          set.add(item);
+        }
       }
     }
 
@@ -137,17 +140,22 @@ export class PermissionService {
     });
 
     let set = new Set<string>();
-    for (let str of user.permissions) {
-      const list = await this.resolvePermissionString(str);
-      for (let item of list) {
-        set.add(item);
+
+    if (user.permissions) {
+      for (let str of user.permissions) {
+        const list = await this.resolvePermissionString(str);
+        for (let item of list) {
+          set.add(item);
+        }
       }
     }
 
-    for (let group of user.groups) {
-      const list = await this.getGroupPermissions(group.uuid);
-      for (let item of list) {
-        set.add(item);
+    if (user.groups) {
+      for (let group of user.groups) {
+        const list = await this.getGroupPermissions(group.uuid);
+        for (let item of list) {
+          set.add(item);
+        }
       }
     }
 
