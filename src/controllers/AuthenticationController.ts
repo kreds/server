@@ -23,7 +23,7 @@ export class AuthenticationController {
 
   @Get('/')
   async index(@Ctx() context: CustomContext) {
-    const user = await context.auth?.user();
+    const user = await context.auth.user();
     return {
       isAuthenticated: !!user,
       user,

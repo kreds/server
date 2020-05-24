@@ -53,7 +53,7 @@ export class Authentication {
 
 export interface CustomContext extends Context {
   jwtData?: JWTData;
-  auth?: Authentication;
+  auth: Authentication;
 }
 
 export class AuthenticationMiddleware implements KoaMiddlewareInterface {
@@ -72,6 +72,10 @@ export class AuthenticationMiddleware implements KoaMiddlewareInterface {
           }
         }
       } catch {}
+    }
+
+    if (!context.auth) {
+      context.auth = new Authentication();
     }
 
     await next();

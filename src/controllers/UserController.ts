@@ -25,7 +25,7 @@ export class UserController {
 
   @Get('/')
   async index(@Ctx() context: CustomContext) {
-    await context.auth?.requirePermission('kreds:users.list');
+    await context.auth.requirePermission('kreds:users.list');
     return await this.userService.all();
   }
 
