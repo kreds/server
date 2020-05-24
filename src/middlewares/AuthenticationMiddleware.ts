@@ -1,6 +1,6 @@
-import { KoaMiddlewareInterface } from 'routing-controllers';
+import { KoaMiddlewareInterface, ForbiddenError } from 'routing-controllers';
 import { verify } from 'jsonwebtoken';
-import { Inject, Container } from 'typedi';
+import { Container } from 'typedi';
 import { Context } from 'koa';
 
 import { JWTData } from '../models/JWTData';
@@ -40,13 +40,13 @@ export class Authentication {
 
   async requirePermission(permission: string) {
     if (!this.authenticated || !(await this.hasPermission(permission))) {
-      throw new Error('Access denied.');
+      throw new ForbiddenError('Access denied.');
     }
   }
 
   async requireAuthentication() {
     if (!this.authenticated) {
-      throw new Error('Access denied.');
+      throw new ForbiddenError('Access denied.');
     }
   }
 }

@@ -35,7 +35,7 @@ export default async function App() {
         OAuth2Controller,
         UserController,
       ],
-      middlewares: [AuthenticationMiddleware, ErrorHandler],
+      middlewares: [ErrorHandler, AuthenticationMiddleware],
       defaultErrorHandler: false,
     });
 

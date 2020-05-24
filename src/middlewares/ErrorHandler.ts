@@ -1,5 +1,9 @@
 import { Context } from 'koa';
-import { Middleware, KoaMiddlewareInterface } from 'routing-controllers';
+import {
+  Middleware,
+  KoaMiddlewareInterface,
+  HttpError,
+} from 'routing-controllers';
 
 @Middleware({ type: 'before' })
 export class ErrorHandler implements KoaMiddlewareInterface {
@@ -7,8 +11,10 @@ export class ErrorHandler implements KoaMiddlewareInterface {
     try {
       await next();
     } catch (error) {
-      context.response.status = 500;
+      const status = error instanceof HttpError ? error.httpCode : 500;
+      context.response.status = status;
       context.response.body = JSON.stringify({
+        httpCode: status,
         success: false,
         error: {
           message: error.message,
