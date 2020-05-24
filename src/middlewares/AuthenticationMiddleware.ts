@@ -14,16 +14,40 @@ export class Authentication {
 
   constructor(private jwtData?: JWTData) {}
 
+  get authenticated() {
+    return this.jwtData && this.jwtData.authenticated;
+  }
+
   async user() {
+    if (!this.authenticated) {
+      return undefined;
+    }
+
     return await this.userService.byUuid(this.jwtData.uuid);
   }
 
   async hasPermission(permission: string) {
+    if (!this.authenticated) {
+      return false;
+    }
+
     const list = await this.permissionService.getUserPermissions(
       this.jwtData.uuid
     );
 
     return list.includes(permission);
+  }
+
+  async requirePermission(permission: string) {
+    if (!this.authenticated || !(await this.hasPermission(permission))) {
+      throw new Error('Access denied.');
+    }
+  }
+
+  async requireAuthentication() {
+    if (!this.authenticated) {
+      throw new Error('Access denied.');
+    }
   }
 }
 
