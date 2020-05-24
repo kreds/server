@@ -81,7 +81,6 @@ export class PermissionService {
 
     const permissions = await this.permissionRepository.find({
       where: { applicationId },
-      relations: ['parent'],
     });
 
     const list = permissions.map(permission => permission.name);
@@ -93,6 +92,18 @@ export class PermissionService {
   async resolvePermissionString(str: string): Promise<string[]> {
     const namespaceSplit = str.split(':');
     if (namespaceSplit.length !== 2) {
+      // TODO: Cache the result of this.
+      if (str === '*') {
+        const permissions = await this.permissionRepository.find({
+          relations: ['application'],
+        });
+        return permissions.map(
+          permission =>
+            (permission.application ? permission.application.name : 'kreds') +
+            ':' +
+            permission.name
+        );
+      }
       return [];
     }
 
