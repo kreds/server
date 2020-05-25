@@ -30,11 +30,17 @@ export class UserController {
   }
 
   @Post('/')
-  async create() {}
+  async create(@Ctx() context: CustomContext) {
+    await context.auth.requirePermission('kreds:users.create');
+  }
 
   @Put('/:id')
-  async update() {}
+  async update(@Ctx() context: CustomContext) {
+    await context.auth.requirePermission('kreds:users.update');
+  }
 
   @Delete('/:id')
-  async delete() {}
+  async delete(@Ctx() context: CustomContext) {
+    await context.auth.requirePermission('kreds:users.delete');
+  }
 }
