@@ -82,6 +82,11 @@ export class PermissionService {
 
   async resolvePermissionString(str: string): Promise<string[]> {
     const list = await this.list();
+
+    if (str === '*') {
+      return list;
+    }
+
     return list.filter(
       listStr => listStr === str || matcher.isMatch(listStr, str)
     );
