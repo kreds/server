@@ -5,7 +5,6 @@ import matcher from 'matcher';
 
 import { Permission } from '../entities/Permission';
 import { GroupService } from './GroupService';
-import { ApplicationService } from './ApplicationService';
 import { Application } from '../entities/Application';
 import { User } from '../entities/User';
 
@@ -20,11 +19,6 @@ export class PermissionService {
   @Inject()
   private groupService: GroupService;
 
-  @Inject()
-  private applicationService: ApplicationService;
-
-  private systemNamespaces = ['kreds'];
-
   /**
    * Cache of permissions allowed for a given user uuid.
    */
@@ -38,7 +32,7 @@ export class PermissionService {
   /**
    * Cache of permissions by namespace.
    */
-  private permissionCache: Record<string, string[]> = {};
+  private permissionCache: string[] = [];
 
   async byId(id: number) {
     return await this.permissionRepository.findOne(id);
@@ -67,54 +61,30 @@ export class PermissionService {
     await this.permissionRepository.save(permission);
   }
 
-  async list(namespace: string = 'kreds') {
-    if (this.permissionCache[namespace]) {
-      return this.permissionCache[namespace];
-    }
-
-    let applicationId: number = null;
-
-    if (!this.systemNamespaces.includes(namespace)) {
-      const application = await this.applicationService.byName(namespace);
-      applicationId = application.id;
+  async list() {
+    if (this.permissionCache) {
+      return this.permissionCache;
     }
 
     const permissions = await this.permissionRepository.find({
-      where: { applicationId },
+      relations: ['application'],
     });
+    const list = permissions.map(
+      permission =>
+        (permission.application ? permission.application.name : 'kreds') +
+        ':' +
+        permission.name
+    );
 
-    const list = permissions.map(permission => permission.name);
-
-    this.permissionCache[namespace] = list;
+    this.permissionCache = list;
     return list;
   }
 
   async resolvePermissionString(str: string): Promise<string[]> {
-    const namespaceSplit = str.split(':');
-    if (namespaceSplit.length !== 2) {
-      // TODO: Cache the result of this.
-      if (str === '*') {
-        const permissions = await this.permissionRepository.find({
-          relations: ['application'],
-        });
-        return permissions.map(
-          permission =>
-            (permission.application ? permission.application.name : 'kreds') +
-            ':' +
-            permission.name
-        );
-      }
-      return [];
-    }
-
-    const list = await this.list(namespaceSplit[0]);
-    if (list.length === 0) {
-      return [];
-    }
-
-    return list
-      .filter(listStr => listStr === str || matcher.isMatch(listStr, str))
-      .map(str => namespaceSplit[0] + ':' + str);
+    const list = await this.list();
+    return list.filter(
+      listStr => listStr === str || matcher.isMatch(listStr, str)
+    );
   }
 
   async getGroupPermissions(uuid: string) {
@@ -191,16 +161,12 @@ export class PermissionService {
     }
   }
 
-  flushPermissionCache(namespace?: string) {
-    if (!namespace) {
-      this.permissionCache = {};
-    } else {
-      delete this.permissionCache[namespace];
-    }
+  flushPermissionCache() {
+    this.permissionCache = [];
   }
 
   flushCache() {
-    this.permissionCache = {};
+    this.permissionCache = [];
     this.groupPermissionCache = {};
     this.userPermissionCache = {};
   }
