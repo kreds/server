@@ -43,7 +43,7 @@ export class User {
   @ManyToMany(type => Group, group => group.users)
   groups: Group[];
 
-  @Column('simple-json')
+  @Column('simple-json', { nullable: true })
   permissions: string[];
 
   @Column({ nullable: true })

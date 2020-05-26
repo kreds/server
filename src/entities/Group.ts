@@ -48,7 +48,7 @@ export class Group {
   @JoinTable()
   users: User[];
 
-  @Column('simple-json')
+  @Column('simple-json', { nullable: true })
   permissions: string[];
 
   @CreateDateColumn()
