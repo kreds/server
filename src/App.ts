@@ -12,7 +12,7 @@ import { GroupController } from './controllers/GroupController';
 import { OAuth2Controller } from './controllers/OAuth2Controller';
 import { UserController } from './controllers/UserController';
 
-import { ErrorHandler } from './middlewares/ErrorHandler';
+import { ErrorMiddleware } from './middlewares/ErrorMiddleware';
 import { AuthenticationMiddleware } from './middlewares/AuthenticationMiddleware';
 
 export default async function App(ormconfig: any) {
@@ -33,7 +33,7 @@ export default async function App(ormconfig: any) {
         OAuth2Controller,
         UserController,
       ],
-      middlewares: [ErrorHandler, AuthenticationMiddleware],
+      middlewares: [ErrorMiddleware, AuthenticationMiddleware],
       defaultErrorHandler: false,
     });
 

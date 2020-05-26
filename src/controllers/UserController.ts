@@ -14,9 +14,7 @@ import {
   CustomContext,
   AuthenticationMiddleware,
 } from '../middlewares/AuthenticationMiddleware';
-import { ErrorHandler } from '../middlewares/ErrorHandler';
 
-@UseBefore(ErrorHandler)
 @UseBefore(AuthenticationMiddleware)
 @Controller('/v1/users')
 export class UserController {

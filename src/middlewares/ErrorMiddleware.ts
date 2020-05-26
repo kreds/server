@@ -6,7 +6,7 @@ import {
 } from 'routing-controllers';
 
 @Middleware({ type: 'before' })
-export class ErrorHandler implements KoaMiddlewareInterface {
+export class ErrorMiddleware implements KoaMiddlewareInterface {
   async use(context: Context, next: (err?: any) => Promise<any>): Promise<any> {
     try {
       await next();
