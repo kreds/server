@@ -1,4 +1,8 @@
-import { KoaMiddlewareInterface, ForbiddenError } from 'routing-controllers';
+import {
+  KoaMiddlewareInterface,
+  ForbiddenError,
+  Middleware,
+} from 'routing-controllers';
 import { verify } from 'jsonwebtoken';
 import { Container } from 'typedi';
 import { Context } from 'koa';
@@ -56,6 +60,7 @@ export interface CustomContext extends Context {
   auth: Authentication;
 }
 
+@Middleware({ type: 'before', priority: 500 })
 export class AuthenticationMiddleware implements KoaMiddlewareInterface {
   async use(context: CustomContext, next: (err?: any) => Promise<any>) {
     if (context.headers['authorization']) {

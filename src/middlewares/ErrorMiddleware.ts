@@ -5,7 +5,7 @@ import {
   HttpError,
 } from 'routing-controllers';
 
-@Middleware({ type: 'before' })
+@Middleware({ type: 'before', priority: 999 })
 export class ErrorMiddleware implements KoaMiddlewareInterface {
   async use(context: Context, next: (err?: any) => Promise<any>): Promise<any> {
     try {

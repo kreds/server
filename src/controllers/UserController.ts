@@ -1,21 +1,9 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Delete,
-  Ctx,
-  UseBefore,
-} from 'routing-controllers';
+import { Controller, Get, Post, Put, Delete, Ctx } from 'routing-controllers';
 import { Inject } from 'typedi';
 
 import { UserService } from '../services/UserService';
-import {
-  CustomContext,
-  AuthenticationMiddleware,
-} from '../middlewares/AuthenticationMiddleware';
+import { CustomContext } from '../middlewares/AuthenticationMiddleware';
 
-@UseBefore(AuthenticationMiddleware)
 @Controller('/v1/users')
 export class UserController {
   @Inject()

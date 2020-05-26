@@ -1,21 +1,10 @@
 import { Inject } from 'typedi';
-import {
-  Controller,
-  Get,
-  Post,
-  Ctx,
-  Body,
-  UseBefore,
-} from 'routing-controllers';
+import { Controller, Get, Post, Ctx, Body } from 'routing-controllers';
 
-import {
-  CustomContext,
-  AuthenticationMiddleware,
-} from '../middlewares/AuthenticationMiddleware';
+import { CustomContext } from '../middlewares/AuthenticationMiddleware';
 import { AuthenticationService } from '../services/AuthenticationService';
 import { AuthenticationRequest } from '../models/AuthenticationRequest';
 
-@UseBefore(AuthenticationMiddleware)
 @Controller('/v1/authentication')
 export class AuthenticationController {
   @Inject()
