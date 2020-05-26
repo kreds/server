@@ -7,7 +7,7 @@ import { verify } from 'jsonwebtoken';
 import { Container } from 'typedi';
 import { Context } from 'koa';
 
-import { JWTData } from '../models/JWTData';
+import { JWTData, AuthenticationStatus } from '../models/JWTData';
 import { UserService } from '../services/UserService';
 import { PermissionService } from '../services/PermissionService';
 
@@ -19,7 +19,11 @@ export class Authentication {
   constructor(private jwtData?: JWTData) {}
 
   get authenticated() {
-    return this.jwtData && this.jwtData.uuid && this.jwtData.authenticated;
+    return (
+      this.jwtData &&
+      this.jwtData.uuid &&
+      this.jwtData.status === AuthenticationStatus.AUTHENTICATED
+    );
   }
 
   async user() {

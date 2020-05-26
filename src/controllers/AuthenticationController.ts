@@ -26,4 +26,15 @@ export class AuthenticationController {
     );
     return authenticationResult;
   }
+
+  @Post('/2fa')
+  async twoFactor(
+    @Ctx() context: CustomContext,
+    @Body() authenticationRequest: AuthenticationRequest
+  ) {
+    const authenticationResult = await this.authenticationService.authenticate(
+      authenticationRequest
+    );
+    return authenticationResult;
+  }
 }

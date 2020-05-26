@@ -16,7 +16,7 @@ import {
   AuthenticationResponseResult,
 } from '../models/AuthenticationResponse';
 import { TwoFactorResponse } from '../models/TwoFactorResponse';
-import { JWTData } from '../models/JWTData';
+import { JWTData, AuthenticationStatus } from '../models/JWTData';
 import { TwoFactorRequest } from '../models/TwoFactorRequest';
 
 @Service()
@@ -74,7 +74,7 @@ export class AuthenticationService {
 
     if (result === AuthenticationResponseResult.SUCCESS) {
       const data: JWTData = {
-        authenticated: true,
+        status: AuthenticationStatus.AUTHENTICATED,
         uuid: user.uuid,
         name: user.name,
       };
@@ -83,7 +83,7 @@ export class AuthenticationService {
       });
     } else if (result === AuthenticationResponseResult.REQUIRE_2FA) {
       const data: JWTData = {
-        authenticated: true,
+        status: AuthenticationStatus.REQUIRE_2FA,
         uuid: user.uuid,
         name: user.name,
       };
@@ -102,7 +102,11 @@ export class AuthenticationService {
     request: TwoFactorRequest,
     jwtData: JWTData
   ): Promise<TwoFactorResponse> {
-    if (!jwtData || !jwtData.uuid || jwtData.authenticated) {
+    if (
+      !jwtData ||
+      !jwtData.uuid ||
+      jwtData.status !== AuthenticationStatus.REQUIRE_2FA
+    ) {
       return {
         success: false,
       };
@@ -123,7 +127,7 @@ export class AuthenticationService {
     }
 
     const data: JWTData = {
-      authenticated: true,
+      status: AuthenticationStatus.AUTHENTICATED,
       uuid: user.uuid,
       name: user.name,
     };
