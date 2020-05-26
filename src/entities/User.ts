@@ -43,7 +43,11 @@ export class User {
   @ManyToMany(type => Group, group => group.users)
   groups: Group[];
 
+  @Column('simple-json')
   permissions: string[];
+
+  @Column({ nullable: true })
+  twoFactorSecret?: string;
 
   @OneToMany(
     type => UserAuthenticationMethod,

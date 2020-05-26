@@ -39,6 +39,7 @@
     "koa-multer": "^1.0.2",
     "koa-router": "^8.0.8",
     "matcher": "^3.0.0",
+    "otplib": "^12.0.1",
     "reflect-metadata": "^0.1.13",
     "routing-controllers": "^0.8.1-alpha.2",
     "sqlite3": "^4.1.1",
