@@ -4,6 +4,7 @@ import { Controller, Get, Post, Ctx, Body } from 'routing-controllers';
 import { CustomContext } from '../middlewares/AuthenticationMiddleware';
 import { AuthenticationService } from '../services/AuthenticationService';
 import { AuthenticationRequest } from '../models/AuthenticationRequest';
+import { TwoFactorRequest } from '../models/TwoFactorRequest';
 
 @Controller('/v1/authentication')
 export class AuthenticationController {
@@ -21,20 +22,17 @@ export class AuthenticationController {
 
   @Post('/')
   async authenticate(@Body() authenticationRequest: AuthenticationRequest) {
-    const authenticationResult = await this.authenticationService.authenticate(
-      authenticationRequest
-    );
-    return authenticationResult;
+    return await this.authenticationService.authenticate(authenticationRequest);
   }
 
-  @Post('/2fa')
+  @Post('/2fa/verify')
   async twoFactor(
     @Ctx() context: CustomContext,
-    @Body() authenticationRequest: AuthenticationRequest
+    @Body() twoFactorRequest: TwoFactorRequest
   ) {
-    const authenticationResult = await this.authenticationService.authenticate(
-      authenticationRequest
+    return await this.authenticationService.twoFactorVerify(
+      twoFactorRequest,
+      context.jwtData
     );
-    return authenticationResult;
   }
 }
