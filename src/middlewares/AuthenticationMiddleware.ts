@@ -15,7 +15,7 @@ export class Authentication {
   constructor(private jwtData?: JWTData) {}
 
   get authenticated() {
-    return this.jwtData && this.jwtData.authenticated;
+    return this.jwtData && this.jwtData.uuid && this.jwtData.authenticated;
   }
 
   async user() {
@@ -64,12 +64,11 @@ export class AuthenticationMiddleware implements KoaMiddlewareInterface {
 
       try {
         const data = verify(token, process.env.JWT_SECRET);
+
         if (typeof data === 'object') {
           const token = data as JWTData;
-          if (token.authenticated) {
-            context.auth = new Authentication(token);
-            context.jwtData = token;
-          }
+          context.auth = new Authentication(token);
+          context.jwtData = token;
         }
       } catch {}
     }
