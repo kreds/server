@@ -151,4 +151,14 @@ export class AuthenticationService {
 
     return authenticator.keyuri(user.name, 'kreds', user.twoFactorSecret);
   }
+
+  async twoFactorDisable(user: User, token: string) {
+    if (!user.twoFactorSecret) {
+      throw new Error('2FA is not enabled for this user.');
+    }
+
+    if (!authenticator.check(token, user.twoFactorSecret)) {
+      throw new Error('Invalid token.');
+    }
+  }
 }
