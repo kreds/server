@@ -140,4 +140,15 @@ export class AuthenticationService {
       token,
     };
   }
+
+  async twoFactorEnable(user: User) {
+    if (user.twoFactorSecret) {
+      throw new Error('2FA is already enabled for this user.');
+    }
+
+    user.twoFactorSecret = authenticator.generateSecret();
+    this.userRepository.save(user);
+
+    return authenticator.keyuri(user.name, 'kreds', user.twoFactorSecret);
+  }
 }
