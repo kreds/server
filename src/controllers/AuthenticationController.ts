@@ -35,4 +35,11 @@ export class AuthenticationController {
       context.jwtData
     );
   }
+
+  @Post('/2fa/enable')
+  async twoFactorEnable(@Ctx() context: CustomContext) {
+    return await this.authenticationService.twoFactorEnable(
+      await context.auth.user()
+    );
+  }
 }
