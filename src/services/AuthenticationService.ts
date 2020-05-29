@@ -149,7 +149,9 @@ export class AuthenticationService {
     user.twoFactorSecret = authenticator.generateSecret();
     this.userRepository.save(user);
 
-    return authenticator.keyuri(user.name, 'kreds', user.twoFactorSecret);
+    return {
+      uri: authenticator.keyuri(user.name, 'kreds', user.twoFactorSecret),
+    };
   }
 
   async twoFactorDisable(user: User, token: string) {
