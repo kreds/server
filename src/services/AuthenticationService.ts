@@ -21,6 +21,7 @@ import { TwoFactorRequest } from '../models/TwoFactorRequest';
 import { RefreshTokenRequest } from '../models/RefreshTokenRequest';
 import { RefreshTokenResponse } from '../models/RefreshTokenResponse';
 import { Session } from '../entities/Session';
+import { CustomContext } from '../middlewares/AuthenticationMiddleware';
 
 @Service()
 export class AuthenticationService {
@@ -31,7 +32,8 @@ export class AuthenticationService {
   private sessionRepository: Repository<Session>;
 
   async authenticate(
-    request: AuthenticationRequestUnion
+    request: AuthenticationRequestUnion,
+    context?: CustomContext
   ): Promise<AuthenticationResponse> {
     const user = await this.userRepository.findOne({
       where: { name: request.username },
@@ -87,6 +89,14 @@ export class AuthenticationService {
       const session = new Session();
       session.refreshToken = randomBytes(128).toString('base64');
       session.user = user;
+
+      if (context) {
+        session.firstIp = context.ip;
+        session.lastIp = context.ip;
+        session.firstUserAgent = context.headers['user-agent'];
+        session.lastUserAgent = context.headers['user-agent'];
+      }
+
       await this.sessionRepository.save(session);
       refreshToken = session.refreshToken;
     } else if (result === AuthenticationResponseResult.REQUIRE_2FA) {
@@ -108,7 +118,8 @@ export class AuthenticationService {
   }
 
   async refreshToken(
-    request: RefreshTokenRequest
+    request: RefreshTokenRequest,
+    context?: CustomContext
   ): Promise<RefreshTokenResponse> {
     const session = await this.sessionRepository.findOne({
       where: { refreshToken: request.refreshToken },
@@ -119,6 +130,12 @@ export class AuthenticationService {
       return {
         success: false,
       };
+    }
+
+    if (context) {
+      session.lastIp = context.ip;
+      session.lastUserAgent = context.headers['user-agent'];
+      await this.sessionRepository.save(session);
     }
 
     const data: JWTData = {

@@ -22,6 +22,18 @@ export class Session {
   @Column()
   refreshToken: string;
 
+  @Column({ nullable: true })
+  firstIp?: string;
+
+  @Column({ nullable: true })
+  lastIp?: string;
+
+  @Column({ nullable: true })
+  firstUserAgent?: string;
+
+  @Column({ nullable: true })
+  lastUserAgent?: string;
+
   @CreateDateColumn()
   createdAt: Date;
 

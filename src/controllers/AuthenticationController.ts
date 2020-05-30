@@ -22,13 +22,25 @@ export class AuthenticationController {
   }
 
   @Post('/')
-  async authenticate(@Body() authenticationRequest: AuthenticationRequest) {
-    return await this.authenticationService.authenticate(authenticationRequest);
+  async authenticate(
+    @Ctx() context: CustomContext,
+    @Body() authenticationRequest: AuthenticationRequest
+  ) {
+    return await this.authenticationService.authenticate(
+      authenticationRequest,
+      context
+    );
   }
 
   @Post('/refresh')
-  async refresh(@Body() refreshRequest: RefreshTokenRequest) {
-    return await this.authenticationService.refreshToken(refreshRequest);
+  async refresh(
+    @Ctx() context: CustomContext,
+    @Body() refreshRequest: RefreshTokenRequest
+  ) {
+    return await this.authenticationService.refreshToken(
+      refreshRequest,
+      context
+    );
   }
 
   @Post('/2fa/verify')
