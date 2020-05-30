@@ -12,11 +12,10 @@ import {
 } from 'typeorm';
 
 import { ApplicationEnvironmentUser } from './ApplicationEnvironmentUser';
-import { Permission } from './Permission';
 import { Group } from './Group';
 import { UserApplication } from './UserApplication';
 import { UserAuthenticationMethod } from './UserAuthenticationMethod';
-import { UserSession } from './UserSession';
+import { Session } from './Session';
 import { Exclude } from 'class-transformer';
 
 @Entity()
@@ -68,8 +67,8 @@ export class User {
   )
   usedApplicationEnvironments: ApplicationEnvironmentUser[];
 
-  @OneToMany(type => UserSession, session => session.user, { cascade: true })
-  sessions: UserSession[];
+  @OneToMany(type => Session, session => session.user, { cascade: true })
+  sessions: Session[];
 
   @CreateDateColumn()
   createdAt: Date;

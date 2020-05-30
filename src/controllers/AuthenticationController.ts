@@ -5,6 +5,7 @@ import { CustomContext } from '../middlewares/AuthenticationMiddleware';
 import { AuthenticationService } from '../services/AuthenticationService';
 import { AuthenticationRequest } from '../models/AuthenticationRequest';
 import { TwoFactorRequest } from '../models/TwoFactorRequest';
+import { RefreshTokenRequest } from '../models/RefreshTokenRequest';
 
 @Controller('/v1/authentication')
 export class AuthenticationController {
@@ -23,6 +24,11 @@ export class AuthenticationController {
   @Post('/')
   async authenticate(@Body() authenticationRequest: AuthenticationRequest) {
     return await this.authenticationService.authenticate(authenticationRequest);
+  }
+
+  @Post('/refresh')
+  async refresh(@Body() refreshRequest: RefreshTokenRequest) {
+    return await this.authenticationService.refreshToken(refreshRequest);
   }
 
   @Post('/2fa/verify')

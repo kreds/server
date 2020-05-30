@@ -18,16 +18,17 @@ import {
 import { TwoFactorResponse } from '../models/TwoFactorResponse';
 import { JWTData, AuthenticationStatus } from '../models/JWTData';
 import { TwoFactorRequest } from '../models/TwoFactorRequest';
+import { RefreshTokenRequest } from '../models/RefreshTokenRequest';
+import { RefreshTokenResponse } from '../models/RefreshTokenResponse';
+import { Session } from '../entities/Session';
 
 @Service()
 export class AuthenticationService {
   @OrmRepository(User)
   private userRepository: Repository<User>;
 
-  @OrmRepository(UserAuthenticationMethod)
-  private userAuthenticationMethodRepository: Repository<
-    UserAuthenticationMethod
-  >;
+  @OrmRepository(Session)
+  private sessionRepository: Repository<Session>;
 
   async authenticate(
     request: AuthenticationRequestUnion
@@ -94,6 +95,35 @@ export class AuthenticationService {
 
     return {
       result,
+      token,
+    };
+  }
+
+  async refreshToken(
+    request: RefreshTokenRequest
+  ): Promise<RefreshTokenResponse> {
+    const session = await this.sessionRepository.findOne({
+      where: { refreshToken: request.refreshToken },
+      relations: ['user'],
+    });
+
+    if (!session) {
+      return {
+        success: false,
+      };
+    }
+
+    const data: JWTData = {
+      status: AuthenticationStatus.AUTHENTICATED,
+      uuid: session.user.uuid,
+      name: session.user.name,
+    };
+    const token = sign(data, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRY,
+    });
+
+    return {
+      success: true,
       token,
     };
   }

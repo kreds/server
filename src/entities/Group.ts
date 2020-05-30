@@ -13,7 +13,6 @@ import {
 } from 'typeorm';
 
 import { Application } from './Application';
-import { Permission } from './Permission';
 import { User } from './User';
 
 @Entity()
