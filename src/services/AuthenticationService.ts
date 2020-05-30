@@ -4,9 +4,9 @@ import { OrmRepository } from 'typeorm-typedi-extensions';
 import { compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { authenticator } from 'otplib';
+import { randomBytes } from 'crypto';
 
 import { User } from '../entities/User';
-import { UserAuthenticationMethod } from '../entities/UserAuthenticationMethod';
 import {
   AuthenticationRequestUnion,
   AuthenticationRequestType,
@@ -51,6 +51,7 @@ export class AuthenticationService {
 
     let result = AuthenticationResponseResult.FAILURE;
     let token: string | undefined = undefined;
+    let refreshToken: string | undefined = undefined;
 
     switch (request.type) {
       case AuthenticationRequestType.PASSWORD:
@@ -82,6 +83,12 @@ export class AuthenticationService {
       token = sign(data, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRY,
       });
+
+      const session = new Session();
+      session.refreshToken = randomBytes(128).toString('base64');
+      session.user = user;
+      await this.sessionRepository.save(session);
+      refreshToken = session.refreshToken;
     } else if (result === AuthenticationResponseResult.REQUIRE_2FA) {
       const data: JWTData = {
         status: AuthenticationStatus.REQUIRE_2FA,
@@ -96,6 +103,7 @@ export class AuthenticationService {
     return {
       result,
       token,
+      refreshToken,
     };
   }
 
