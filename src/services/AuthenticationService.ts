@@ -31,6 +31,22 @@ export class AuthenticationService {
   @OrmRepository(Session)
   private sessionRepository: Repository<Session>;
 
+  async createSession(user: User, context?: CustomContext) {
+    const session = new Session();
+    session.refreshToken = randomBytes(128).toString('base64');
+    session.user = user;
+
+    if (context) {
+      session.firstIp = context.ip;
+      session.lastIp = context.ip;
+      session.firstUserAgent = context.headers['user-agent'];
+      session.lastUserAgent = context.headers['user-agent'];
+    }
+
+    await this.sessionRepository.save(session);
+    return session;
+  }
+
   async authenticate(
     request: AuthenticationRequestUnion,
     context?: CustomContext
@@ -86,19 +102,7 @@ export class AuthenticationService {
         expiresIn: process.env.JWT_EXPIRY,
       });
 
-      const session = new Session();
-      session.refreshToken = randomBytes(128).toString('base64');
-      session.user = user;
-
-      if (context) {
-        session.firstIp = context.ip;
-        session.lastIp = context.ip;
-        session.firstUserAgent = context.headers['user-agent'];
-        session.lastUserAgent = context.headers['user-agent'];
-      }
-
-      await this.sessionRepository.save(session);
-      refreshToken = session.refreshToken;
+      refreshToken = (await this.createSession(user, context)).refreshToken;
     } else if (result === AuthenticationResponseResult.REQUIRE_2FA) {
       const data: JWTData = {
         status: AuthenticationStatus.REQUIRE_2FA,
@@ -155,7 +159,8 @@ export class AuthenticationService {
 
   async twoFactorVerify(
     request: TwoFactorRequest,
-    jwtData: JWTData
+    jwtData: JWTData,
+    context?: CustomContext
   ): Promise<TwoFactorResponse> {
     if (
       !jwtData ||
@@ -193,6 +198,7 @@ export class AuthenticationService {
     return {
       success: true,
       token,
+      refreshToken: (await this.createSession(user, context)).refreshToken,
     };
   }
 

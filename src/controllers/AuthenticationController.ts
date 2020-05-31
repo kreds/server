@@ -50,7 +50,8 @@ export class AuthenticationController {
   ) {
     return await this.authenticationService.twoFactorVerify(
       twoFactorRequest,
-      context.jwtData
+      context.jwtData,
+      context
     );
   }
 
