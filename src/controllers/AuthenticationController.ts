@@ -1,5 +1,5 @@
 import { Inject } from 'typedi';
-import { Controller, Get, Post, Ctx, Body } from 'routing-controllers';
+import { JsonController, Get, Post, Ctx, Body } from 'routing-controllers';
 
 import { CustomContext } from '../middlewares/AuthenticationMiddleware';
 import { AuthenticationService } from '../services/AuthenticationService';
@@ -7,7 +7,7 @@ import { AuthenticationRequest } from '../models/AuthenticationRequest';
 import { TwoFactorRequest } from '../models/TwoFactorRequest';
 import { RefreshTokenRequest } from '../models/RefreshTokenRequest';
 
-@Controller('/v1/authentication')
+@JsonController('/v1/authentication')
 export class AuthenticationController {
   @Inject()
   private authenticationService: AuthenticationService;

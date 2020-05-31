@@ -1,10 +1,17 @@
-import { Controller, Get, Ctx, Post, Put, Delete } from 'routing-controllers';
+import {
+  JsonController,
+  Get,
+  Ctx,
+  Post,
+  Put,
+  Delete,
+} from 'routing-controllers';
 import { Inject } from 'typedi';
 
 import { GroupService } from '../services/GroupService';
 import { CustomContext } from '../middlewares/AuthenticationMiddleware';
 
-@Controller('/v1/groups')
+@JsonController('/v1/groups')
 export class GroupController {
   @Inject()
   private groupService: GroupService;

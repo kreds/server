@@ -1,10 +1,17 @@
-import { Controller, Get, Ctx, Post, Put, Delete } from 'routing-controllers';
+import {
+  JsonController,
+  Get,
+  Ctx,
+  Post,
+  Put,
+  Delete,
+} from 'routing-controllers';
 import { Inject } from 'typedi';
 
 import { CustomContext } from '../middlewares/AuthenticationMiddleware';
 import { PermissionService } from '../services/PermissionService';
 
-@Controller('/v1/permissions')
+@JsonController('/v1/permissions')
 export class PermissionController {
   @Inject()
   private permissionService: PermissionService;
