@@ -1,11 +1,19 @@
 import { Inject } from 'typedi';
-import { JsonController, Get, Post, Ctx, Body } from 'routing-controllers';
+import {
+  JsonController,
+  Get,
+  Post,
+  Ctx,
+  Body,
+  CurrentUser,
+} from 'routing-controllers';
 
-import { CustomContext } from '../middlewares/AuthenticationMiddleware';
 import { AuthenticationService } from '../services/AuthenticationService';
 import { AuthenticationRequest } from '../models/AuthenticationRequest';
 import { TwoFactorRequest } from '../models/TwoFactorRequest';
 import { RefreshTokenRequest } from '../models/RefreshTokenRequest';
+import { User } from '../entities/User';
+import { Context } from 'koa';
 
 @JsonController('/v1/authentication')
 export class AuthenticationController {
@@ -13,8 +21,7 @@ export class AuthenticationController {
   private authenticationService: AuthenticationService;
 
   @Get('/')
-  async index(@Ctx() context: CustomContext) {
-    const user = await context.auth.user();
+  async index(@CurrentUser() user?: User) {
     return {
       isAuthenticated: !!user,
       user,
@@ -23,7 +30,7 @@ export class AuthenticationController {
 
   @Post('/')
   async authenticate(
-    @Ctx() context: CustomContext,
+    @Ctx() context: Context,
     @Body() authenticationRequest: AuthenticationRequest
   ) {
     return await this.authenticationService.authenticate(
@@ -34,7 +41,7 @@ export class AuthenticationController {
 
   @Post('/refresh')
   async refresh(
-    @Ctx() context: CustomContext,
+    @Ctx() context: Context,
     @Body() refreshRequest: RefreshTokenRequest
   ) {
     return await this.authenticationService.refreshToken(
@@ -45,20 +52,19 @@ export class AuthenticationController {
 
   @Post('/2fa/verify')
   async twoFactor(
-    @Ctx() context: CustomContext,
+    @Ctx() context: Context,
+    @CurrentUser({ required: true }) user: User,
     @Body() twoFactorRequest: TwoFactorRequest
   ) {
     return await this.authenticationService.twoFactorVerify(
       twoFactorRequest,
-      context.jwtData,
+      user,
       context
     );
   }
 
   @Post('/2fa/enable')
-  async twoFactorEnable(@Ctx() context: CustomContext) {
-    return await this.authenticationService.twoFactorEnable(
-      await context.auth.user()
-    );
+  async twoFactorEnable(@CurrentUser({ required: true }) user: User) {
+    return await this.authenticationService.twoFactorEnable(user);
   }
 }

@@ -5,6 +5,7 @@ import { compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { authenticator } from 'otplib';
 import { randomBytes } from 'crypto';
+import { Context } from 'koa';
 
 import { User } from '../entities/User';
 import {
@@ -21,7 +22,6 @@ import { TwoFactorRequest } from '../models/TwoFactorRequest';
 import { RefreshTokenRequest } from '../models/RefreshTokenRequest';
 import { RefreshTokenResponse } from '../models/RefreshTokenResponse';
 import { Session } from '../entities/Session';
-import { CustomContext } from '../middlewares/AuthenticationMiddleware';
 
 @Service()
 export class AuthenticationService {
@@ -31,7 +31,7 @@ export class AuthenticationService {
   @OrmRepository(Session)
   private sessionRepository: Repository<Session>;
 
-  async createSession(user: User, context?: CustomContext) {
+  async createSession(user: User, context?: Context) {
     const session = new Session();
     session.refreshToken = randomBytes(128).toString('base64');
     session.user = user;
@@ -49,7 +49,7 @@ export class AuthenticationService {
 
   async authenticate(
     request: AuthenticationRequestUnion,
-    context?: CustomContext
+    context?: Context
   ): Promise<AuthenticationResponse> {
     const user = await this.userRepository.findOne({
       where: { name: request.username },
@@ -123,7 +123,7 @@ export class AuthenticationService {
 
   async refreshToken(
     request: RefreshTokenRequest,
-    context?: CustomContext
+    context?: Context
   ): Promise<RefreshTokenResponse> {
     const session = await this.sessionRepository.findOne({
       where: { refreshToken: request.refreshToken },
@@ -159,23 +159,9 @@ export class AuthenticationService {
 
   async twoFactorVerify(
     request: TwoFactorRequest,
-    jwtData: JWTData,
-    context?: CustomContext
+    user: User,
+    context?: Context
   ): Promise<TwoFactorResponse> {
-    if (
-      !jwtData ||
-      !jwtData.uuid ||
-      jwtData.status !== AuthenticationStatus.REQUIRE_2FA
-    ) {
-      return {
-        success: false,
-      };
-    }
-
-    const user = await this.userRepository.findOne({
-      where: { uuid: jwtData.uuid },
-    });
-
     if (
       !user?.twoFactorSecret ||
       !request.token ||
