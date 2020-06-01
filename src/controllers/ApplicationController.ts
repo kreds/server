@@ -1,15 +1,14 @@
 import {
   JsonController,
   Get,
-  Ctx,
   Post,
   Put,
   Delete,
+  Authorized,
 } from 'routing-controllers';
 import { Inject } from 'typedi';
 
 import { ApplicationService } from '../services/ApplicationService';
-import { CustomContext } from '../middlewares/AuthenticationMiddleware';
 
 @JsonController('/v1/applications')
 export class ApplicationController {
@@ -17,23 +16,20 @@ export class ApplicationController {
   private applicationService: ApplicationService;
 
   @Get('/')
-  async index(@Ctx() context: CustomContext) {
-    await context.auth.requirePermission('kreds:applications.list');
+  @Authorized('kreds:applications.list')
+  async index() {
     return await this.applicationService.all();
   }
 
   @Post('/')
-  async create(@Ctx() context: CustomContext) {
-    await context.auth.requirePermission('kreds:applications.create');
-  }
+  @Authorized('kreds:applications.create')
+  async create() {}
 
   @Put('/:id')
-  async update(@Ctx() context: CustomContext) {
-    await context.auth.requirePermission('kreds:applications.update');
-  }
+  @Authorized('kreds:applications.update')
+  async update() {}
 
   @Delete('/:id')
-  async delete(@Ctx() context: CustomContext) {
-    await context.auth.requirePermission('kreds:applications.delete');
-  }
+  @Authorized('kreds:applications.delete')
+  async delete() {}
 }

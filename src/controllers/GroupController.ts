@@ -1,39 +1,35 @@
 import {
   JsonController,
   Get,
-  Ctx,
   Post,
   Put,
   Delete,
+  Authorized,
 } from 'routing-controllers';
 import { Inject } from 'typedi';
 
 import { GroupService } from '../services/GroupService';
-import { CustomContext } from '../middlewares/AuthenticationMiddleware';
 
 @JsonController('/v1/groups')
 export class GroupController {
   @Inject()
   private groupService: GroupService;
 
+  @Authorized('kreds:groups.list')
   @Get('/')
-  async index(@Ctx() context: CustomContext) {
-    await context.auth.requirePermission('kreds:groups.list');
+  async index() {
     return await this.groupService.all();
   }
 
+  @Authorized('kreds:groups.create')
   @Post('/')
-  async create(@Ctx() context: CustomContext) {
-    await context.auth.requirePermission('kreds:groups.create');
-  }
+  async create() {}
 
+  @Authorized('kreds:groups.update')
   @Put('/:id')
-  async update(@Ctx() context: CustomContext) {
-    await context.auth.requirePermission('kreds:groups.update');
-  }
+  async update() {}
 
+  @Authorized('kreds:groups.delete')
   @Delete('/:id')
-  async delete(@Ctx() context: CustomContext) {
-    await context.auth.requirePermission('kreds:groups.delete');
-  }
+  async delete() {}
 }

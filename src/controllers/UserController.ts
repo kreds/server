@@ -4,12 +4,11 @@ import {
   Post,
   Put,
   Delete,
-  Ctx,
+  Authorized,
 } from 'routing-controllers';
 import { Inject } from 'typedi';
 
 import { UserService } from '../services/UserService';
-import { CustomContext } from '../middlewares/AuthenticationMiddleware';
 
 @JsonController('/v1/users')
 export class UserController {
@@ -17,23 +16,20 @@ export class UserController {
   private userService: UserService;
 
   @Get('/')
-  async index(@Ctx() context: CustomContext) {
-    await context.auth.requirePermission('kreds:users.list');
+  @Authorized('kreds:users.list')
+  async index() {
     return await this.userService.all();
   }
 
   @Post('/')
-  async create(@Ctx() context: CustomContext) {
-    await context.auth.requirePermission('kreds:users.create');
-  }
+  @Authorized('kreds:users.create')
+  async create() {}
 
   @Put('/:id')
-  async update(@Ctx() context: CustomContext) {
-    await context.auth.requirePermission('kreds:users.update');
-  }
+  @Authorized('kreds:users.update')
+  async update() {}
 
   @Delete('/:id')
-  async delete(@Ctx() context: CustomContext) {
-    await context.auth.requirePermission('kreds:users.delete');
-  }
+  @Authorized('kreds:users.delete')
+  async delete() {}
 }

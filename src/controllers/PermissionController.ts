@@ -1,14 +1,13 @@
 import {
   JsonController,
   Get,
-  Ctx,
   Post,
   Put,
   Delete,
+  Authorized,
 } from 'routing-controllers';
 import { Inject } from 'typedi';
 
-import { CustomContext } from '../middlewares/AuthenticationMiddleware';
 import { PermissionService } from '../services/PermissionService';
 
 @JsonController('/v1/permissions')
@@ -17,23 +16,20 @@ export class PermissionController {
   private permissionService: PermissionService;
 
   @Get('/')
-  async index(@Ctx() context: CustomContext) {
-    await context.auth.requirePermission('kreds:permissions.list');
+  @Authorized('kreds:permissions.list')
+  async index() {
     return await this.permissionService.all();
   }
 
   @Post('/')
-  async create(@Ctx() context: CustomContext) {
-    await context.auth.requirePermission('kreds:permissions.create');
-  }
+  @Authorized('kreds:permissions.create')
+  async create() {}
 
   @Put('/:id')
-  async update(@Ctx() context: CustomContext) {
-    await context.auth.requirePermission('kreds:permissions.update');
-  }
+  @Authorized('kreds:permissions.update')
+  async update() {}
 
   @Delete('/:id')
-  async delete(@Ctx() context: CustomContext) {
-    await context.auth.requirePermission('kreds:permissions.delete');
-  }
+  @Authorized('kreds:permissions.delete')
+  async delete() {}
 }
