@@ -6,6 +6,7 @@ import {
   Ctx,
   Body,
   CurrentUser,
+  Authorized,
 } from 'routing-controllers';
 
 import { AuthenticationService } from '../services/AuthenticationService';
@@ -64,6 +65,7 @@ export class AuthenticationController {
   }
 
   @Post('/2fa/enable')
+  @Authorized()
   async twoFactorEnable(@CurrentUser({ required: true }) user: User) {
     return await this.authenticationService.twoFactorEnable(user);
   }

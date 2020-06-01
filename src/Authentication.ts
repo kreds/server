@@ -15,8 +15,7 @@ export function getJWTData(context: Context): JWTData | undefined {
     const data = verify(token, process.env.JWT_SECRET);
 
     if (typeof data === 'object') {
-      const token = data as JWTData;
-      return token;
+      return data as JWTData;
     }
   } catch {}
 }
@@ -26,5 +25,14 @@ export function isAuthenticated(jwtData: JWTData) {
     jwtData &&
     jwtData.uuid &&
     jwtData.status === AuthenticationStatus.AUTHENTICATED
+  );
+}
+
+export function hasUserData(jwtData: JWTData) {
+  return (
+    jwtData &&
+    jwtData.uuid &&
+    (jwtData.status === AuthenticationStatus.AUTHENTICATED ||
+      jwtData.status === AuthenticationStatus.REQUIRE_2FA)
   );
 }

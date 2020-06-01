@@ -14,7 +14,7 @@ import { OAuth2Controller } from './controllers/OAuth2Controller';
 import { UserController } from './controllers/UserController';
 
 import { ErrorMiddleware } from './middlewares/ErrorMiddleware';
-import { getJWTData, isAuthenticated } from './Authentication';
+import { getJWTData, isAuthenticated, hasUserData } from './Authentication';
 import { UserService } from './services/UserService';
 import { PermissionService } from './services/PermissionService';
 
@@ -41,28 +41,30 @@ export default async function App(ormconfig: any) {
       authorizationChecker: async (action: Action, roles: string[]) => {
         const jwtData = getJWTData(action.context);
 
-        if (isAuthenticated(jwtData)) {
-          const permissionService = Container.get(PermissionService);
-          const list = await permissionService.getUserPermissions(jwtData.uuid);
-
-          for (let role of roles) {
-            if (!list.includes(role)) {
-              return false;
-            }
-          }
-
-          return true;
+        if (!isAuthenticated(jwtData)) {
+          return false;
         }
 
-        return false;
+        const permissionService = Container.get(PermissionService);
+        const list = await permissionService.getUserPermissions(jwtData.uuid);
+
+        for (let role of roles) {
+          if (!list.includes(role)) {
+            return false;
+          }
+        }
+
+        return true;
       },
       currentUserChecker: async (action: Action) => {
         const jwtData = getJWTData(action.context);
 
-        if (isAuthenticated(jwtData)) {
-          const userService = Container.get(UserService);
-          return await userService.byUuid(jwtData.uuid);
+        if (!hasUserData(jwtData)) {
+          return undefined;
         }
+
+        const userService = Container.get(UserService);
+        return await userService.byUuid(jwtData.uuid);
       },
     });
 
