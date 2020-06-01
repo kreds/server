@@ -70,6 +70,7 @@ export class AuthenticationService {
     let result = AuthenticationResponseResult.FAILURE;
     let token: string | undefined = undefined;
     let refreshToken: string | undefined = undefined;
+    let expiresIn: number | undefined = undefined;
 
     switch (request.type) {
       case AuthenticationRequestType.PASSWORD:
@@ -98,8 +99,10 @@ export class AuthenticationService {
         uuid: user.uuid,
         name: user.name,
       };
+
+      expiresIn = parseInt(process.env.JWT_EXPIRY);
       token = sign(data, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRY,
+        expiresIn,
       });
 
       refreshToken = (await this.createSession(user, context)).refreshToken;
@@ -109,8 +112,10 @@ export class AuthenticationService {
         uuid: user.uuid,
         name: user.name,
       };
+
+      expiresIn = parseInt(process.env.JWT_EXPIRY);
       token = sign(data, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRY,
+        expiresIn,
       });
     }
 
@@ -118,6 +123,7 @@ export class AuthenticationService {
       result,
       token,
       refreshToken,
+      expiresIn,
     };
   }
 
@@ -147,13 +153,15 @@ export class AuthenticationService {
       uuid: session.user.uuid,
       name: session.user.name,
     };
+    const expiresIn = parseInt(process.env.JWT_EXPIRY);
     const token = sign(data, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRY,
+      expiresIn,
     });
 
     return {
       success: true,
       token,
+      expiresIn,
     };
   }
 
@@ -177,14 +185,16 @@ export class AuthenticationService {
       uuid: user.uuid,
       name: user.name,
     };
+    const expiresIn = parseInt(process.env.JWT_EXPIRY);
     const token = sign(data, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRY,
+      expiresIn,
     });
 
     return {
       success: true,
       token,
       refreshToken: (await this.createSession(user, context)).refreshToken,
+      expiresIn,
     };
   }
 

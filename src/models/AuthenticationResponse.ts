@@ -8,4 +8,5 @@ export interface AuthenticationResponse {
   result: AuthenticationResponseResult;
   token?: string;
   refreshToken?: string;
+  expiresIn?: number;
 }
