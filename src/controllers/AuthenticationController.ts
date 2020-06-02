@@ -7,6 +7,7 @@ import {
   Body,
   CurrentUser,
   Authorized,
+  CookieParam,
 } from 'routing-controllers';
 
 import { AuthenticationService } from '../services/AuthenticationService';
@@ -43,10 +44,11 @@ export class AuthenticationController {
   @Post('/refresh')
   async refresh(
     @Ctx() context: Context,
-    @Body() refreshRequest: RefreshTokenRequest
+    @Body() refreshRequest: RefreshTokenRequest,
+    @CookieParam('kreds_refresh_token') refreshToken?: string
   ) {
     return await this.authenticationService.refreshToken(
-      refreshRequest,
+      refreshRequest?.refreshToken || refreshToken,
       context
     );
   }

@@ -128,11 +128,11 @@ export class AuthenticationService {
   }
 
   async refreshToken(
-    request: RefreshTokenRequest,
+    refreshToken: string,
     context?: Context
   ): Promise<RefreshTokenResponse> {
     const session = await this.sessionRepository.findOne({
-      where: { refreshToken: request.refreshToken },
+      where: { refreshToken },
       relations: ['user'],
     });
 
