@@ -11,10 +11,7 @@ import {
 } from 'routing-controllers';
 
 import { AuthenticationService } from '../services/AuthenticationService';
-import {
-  AuthenticationRequest,
-  RefreshTokenStorage,
-} from '../models/AuthenticationRequest';
+import { AuthenticationRequest } from '../models/AuthenticationRequest';
 import { TwoFactorRequest } from '../models/TwoFactorRequest';
 import { RefreshTokenRequest } from '../models/RefreshTokenRequest';
 import { User } from '../entities/User';

@@ -18,6 +18,7 @@ import { getJWTData, isAuthenticated, hasUserData } from './Authentication';
 import { UserService } from './services/UserService';
 import { PermissionService } from './services/PermissionService';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default async function App(ormconfig: any) {
   useContainerTO(Container);
   useContainerRC(Container);
@@ -48,7 +49,7 @@ export default async function App(ormconfig: any) {
         const permissionService = Container.get(PermissionService);
         const list = await permissionService.getUserPermissions(jwtData.uuid);
 
-        for (let role of roles) {
+        for (const role of roles) {
           if (!list.includes(role)) {
             return false;
           }

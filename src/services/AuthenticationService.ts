@@ -20,7 +20,6 @@ import {
 import { TwoFactorResponse } from '../models/TwoFactorResponse';
 import { JWTData, AuthenticationStatus } from '../models/JWTData';
 import { TwoFactorRequest } from '../models/TwoFactorRequest';
-import { RefreshTokenRequest } from '../models/RefreshTokenRequest';
 import { RefreshTokenResponse } from '../models/RefreshTokenResponse';
 import { Session } from '../entities/Session';
 

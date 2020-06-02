@@ -17,7 +17,7 @@ export interface AuthenticationRequest {
   type: AuthenticationRequestType;
   username: string;
   subtype: string;
-  data: any;
+  data: Record<string, string> | string;
   refreshTokenStorage?: RefreshTokenStorage;
 }
 
@@ -30,13 +30,13 @@ export interface AuthenticationRequestPassword extends AuthenticationRequest {
 export interface AuthenticationRequestOAuth2 extends AuthenticationRequest {
   type: AuthenticationRequestType.OAUTH2;
   subtype: string;
-  data: any;
+  data: Record<string, string>;
 }
 
 export interface AuthenticationRequestExtension extends AuthenticationRequest {
   type: AuthenticationRequestType.EXTENSION;
   subtype: string;
-  data: any;
+  data: Record<string, string>;
 }
 
 export type AuthenticationRequestUnion =
