@@ -8,11 +8,17 @@ export enum AuthenticationRequestPasswordSubtype {
   BCRYPT = 'bcrypt',
 }
 
+export enum RefreshTokenStorage {
+  NONE = 'none',
+  COOKIES = 'cookies',
+}
+
 export interface AuthenticationRequest {
   type: AuthenticationRequestType;
   username: string;
   subtype: string;
   data: any;
+  refreshTokenStorage?: RefreshTokenStorage;
 }
 
 export interface AuthenticationRequestPassword extends AuthenticationRequest {

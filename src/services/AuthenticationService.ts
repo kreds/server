@@ -11,6 +11,7 @@ import { User } from '../entities/User';
 import {
   AuthenticationRequestUnion,
   AuthenticationRequestType,
+  RefreshTokenStorage,
 } from '../models/AuthenticationRequest';
 import {
   AuthenticationResponse,
@@ -119,12 +120,16 @@ export class AuthenticationService {
       });
     }
 
-    return {
-      result,
-      token,
-      refreshToken,
-      expiresIn,
-    };
+    return this.handleCookieRefreshTokenStorage(
+      request,
+      {
+        result,
+        token,
+        refreshToken,
+        expiresIn,
+      },
+      context
+    );
   }
 
   async refreshToken(
@@ -190,12 +195,16 @@ export class AuthenticationService {
       expiresIn,
     });
 
-    return {
-      success: true,
-      token,
-      refreshToken: (await this.createSession(user, context)).refreshToken,
-      expiresIn,
-    };
+    return this.handleCookieRefreshTokenStorage(
+      request,
+      {
+        success: true,
+        token,
+        refreshToken: (await this.createSession(user, context)).refreshToken,
+        expiresIn,
+      },
+      context
+    );
   }
 
   async twoFactorEnable(user: User) {
@@ -219,5 +228,26 @@ export class AuthenticationService {
     if (!authenticator.check(token, user.twoFactorSecret)) {
       throw new Error('Invalid token.');
     }
+  }
+
+  private handleCookieRefreshTokenStorage<T extends { refreshToken?: string }>(
+    request: AuthenticationRequestUnion | TwoFactorRequest,
+    result: T,
+    context: Context
+  ) {
+    if (
+      request.refreshTokenStorage === RefreshTokenStorage.COOKIES &&
+      typeof result['refreshToken'] === 'string'
+    ) {
+      const cookieExpirationDate = new Date();
+      cookieExpirationDate.setFullYear(cookieExpirationDate.getFullYear() + 1);
+      context.cookies.set('kreds_refresh_token', result.refreshToken, {
+        httpOnly: true,
+        expires: cookieExpirationDate,
+      });
+      delete result['refreshToken'];
+    }
+
+    return result as T;
   }
 }
