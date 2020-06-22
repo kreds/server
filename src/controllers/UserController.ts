@@ -5,6 +5,8 @@ import {
   Put,
   Delete,
   Authorized,
+  Param,
+  NotFoundError,
 } from 'routing-controllers';
 import { Inject } from 'typedi';
 
@@ -31,5 +33,13 @@ export class UserController {
 
   @Delete('/:id')
   @Authorized('kreds:users.delete')
-  async delete() {}
+  async delete(@Param('id') id: number) {
+    const user = await this.userService.byId(id);
+    if (!user) {
+      throw new NotFoundError();
+    }
+
+    await this.userService.remove(user);
+    return { success: true };
+  }
 }
